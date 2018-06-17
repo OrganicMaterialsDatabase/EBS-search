@@ -2,6 +2,8 @@
 
 This repository hosts the code and a test case for the paper [arXiv:1710.11611](https://arxiv.org/abs/1710.11611). Tested with Python 3.6.5.
 
+To see the tool in action, register for free at: [omdb.diracmaterials.org](https://omdb.diracmaterials.org)
+
 ## Installation
 ```
 pip install -r requirements.txt
