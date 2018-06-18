@@ -12,7 +12,7 @@ parser.add_argument('--dataset', required=True, help='folder | fake')
 parser.add_argument('--band_index', type=int, default=0, help='band index relative to Fermi level')
 parser.add_argument('--width', type=float, default=.4, help='sliding window width')
 parser.add_argument('--dimensions', type=int, default=16, help='number of data points for each band')
-parser.add_argument('--stride', type=int, default=0, help='number of data points to skip')
+parser.add_argument('--stride', type=int, default=1, help='number of data points to slide each window (1 means zero datapoints are skipped)')
 parser.add_argument('--trees', type=int, default=10, help='number of trees in annoy index')
 opt = parser.parse_args()
 print(opt)
@@ -50,8 +50,9 @@ for folder in tqdm(os.listdir('data')):
     k_norm = 0
     for k, band_l, band_u in zip(segmented_kpoints, segmented_lower_band, segmented_upper_band):
         k_1D = np.array(path_1D(k))
+        k_1D_strided = [k_1D[i] for i in range(0, len(k_1D), opt.stride)]
 
-        for window_left in k_1D:
+        for window_left in k_1D_strided:
             window_right = window_left + opt.width
             if window_right > np.max(k_1D):
                 break
