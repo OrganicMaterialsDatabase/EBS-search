@@ -19,6 +19,7 @@ python create_index.py --dataset folder --band_index -1 --width 0.4 --dimensions
 python search.py --band_index -1 --width 0.4 --dimensions 16
 ```
 The following plot should appear:
+
 ![Search Result Dirac crossing](misc/crossing_search_result.png)
 
 ## Test
