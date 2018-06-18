@@ -30,7 +30,9 @@ For reference, see the [OMDB material information](https://omdb.diracmaterials.o
 
 ## Test data
 This repo contains a fake data generator [lib/fake.py](lib/fake.py):
+
 ![Fake data](misc/fake_data.png)
+
 ```
 python create_test_index.py --width 0.4 --dimensions 64 --trees 10
 ```
