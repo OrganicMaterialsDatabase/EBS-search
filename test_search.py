@@ -21,7 +21,7 @@ annoyindex.load('index_test.ann')
 
 lookuptable = np.load('lookuptable_test.npy')
 
-# Define a crossing (Dirac cone) as a search pattern
+# Define a search pattern
 if opt.pattern == 'crossing':
     search_upper = interpolate_normalize([0, .5, 1], [1, 0, 1], opt.dimensions)
     search_lower = interpolate_normalize([0, .5, 1], [-1, 0, -1], opt.dimensions)
