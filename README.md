@@ -19,14 +19,14 @@ python create_index.py --dataset folder --band_index -1 --width 0.4 --dimensions
 
 Perform the search for a crossing/node:
 ```
-python search.py --band_index -1 --width 0.4 --dimensions 16
+python search.py --band_index -1 --width 0.4 --dimensions 16 --pattern crossing
 ```
 
 This prints the angular distance and the following plot should appear:
 
 ![Search Result Dirac crossing](misc/crossing_search_result.png)
 
-Note that the lookup table also contains information about the gap between the two bands. On the OMDB this is used to apply post-processing to the search results (e.g. filtering out gapped matches).
+For reference, see the [OMDB material information](https://omdb.diracmaterials.org/material/cod/7155013). Note that the lookup table also contains information about the gap between the two bands. On the OMDB this is used to apply post-processing to the search results (e.g. filtering out gapped matches).
 
 ## Test
 TODO
