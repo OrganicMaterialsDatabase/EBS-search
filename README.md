@@ -28,5 +28,6 @@ This prints the angular distance and the following plot should appear:
 
 For reference, see the [OMDB material information](https://omdb.diracmaterials.org/material/cod/7155013). Note that the lookup table also contains information about the gap between the two bands. On the OMDB this is used to apply post-processing to the search results (e.g. filtering out gapped matches).
 
-## Test
+## Test data
 TODO
+![Fake data](misc/fake_data.png)

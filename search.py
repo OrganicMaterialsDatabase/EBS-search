@@ -40,7 +40,6 @@ else:
 
 # Plot search pattern
 # import matplotlib.pyplot as plt
-# plt.show()
 # plt.plot(search_upper)
 # plt.plot(search_lower)
 # plt.show()
