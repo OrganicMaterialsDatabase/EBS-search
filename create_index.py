@@ -2,6 +2,7 @@ import os
 import argparse
 from tqdm import tqdm
 from lib import vasp
+from lib.preprocessing import path_1D, interpolate, interpolate_normalize
 import numpy as np
 from annoy import AnnoyIndex
 
@@ -17,36 +18,11 @@ opt = parser.parse_args()
 print(opt)
 
 
-annoyindex = AnnoyIndex(int(2*opt.dimensions))
+# Annoy index stores the electronic band structure with each vector corresponding to a sliding window.
+annoyindex = AnnoyIndex(int(2*opt.dimensions), metric='angular')
+
+# A lookuptable is necessary to link annoy vectors to their correct material and k-space position.
 lookuptable = []
-
-def path_1D(k):
-    """
-    Fold out path in 3D along a 1D line by taking the norm between each set of points.
-    """
-    norm_path = [0]
-    for i in range(len(k)-1):
-        norm_path.append(np.linalg.norm(k[i+1]-k[i]))
-    return np.cumsum(norm_path)
-
-def interpolate(x, line):
-    """
-    Interpolate so that we have the number of dimensions if there are too few points.
-    """
-    if len(x) != opt.dimensions:
-        new_x = np.linspace(np.min(x), np.max(x), opt.dimensions)
-        line = np.interp(new_x, x, line)
-    return line
-
-def interpolate_normalize(k, E):
-    """
-    First interpolate (see interpolate). Next, subtract the mean and normalize a single band.
-    """
-    E_interp = interpolate(k, E)
-    E_interp = E_interp - E_interp.mean()
-    if np.linalg.norm(E_interp) > 1e-5:
-        E_interp = E_interp / np.linalg.norm(E_interp)
-    return E_interp
 
 
 for folder in tqdm(os.listdir('data')):
@@ -58,19 +34,12 @@ for folder in tqdm(os.listdir('data')):
     eigenval = vasp.Eigenval('data/' + folder + '/EIGENVAL.gz', fermi_level=fermi_energy)
 
     bands = eigenval.spin_up
-    lower_fermi_band_index = np.argmax(np.nanmax(bands,axis=1) > 0)
+    # lower_fermi_band_index indicates the band just below Fermi level
+    lower_fermi_band_index = np.argmax(np.nanmax(bands,axis=1) > 0) - 1
 
     # Find continuous segments in KPOINTS
     # For example: segment_sizes => [40, 40, 40, 20]
-    last_k = None
-    segment_sizes = []
-    for segment in vasp.chunks(kpoints.k_points, 2):
-        # segment => [('X', array([0.5, 0. , 0. ])), ('Γ', array([0., 0., 0.]))]
-        if np.array_equal(segment[0][1], last_k):
-            segment_sizes[-1] += kpoints.intersections
-        else:
-            segment_sizes.append(kpoints.intersections)
-        last_k = segment[1][1]
+    segment_sizes = kpoints.segment_sizes
 
     # Extract the bands and split them in continuous segments
     segmented_lower_band = np.split(bands[lower_fermi_band_index+opt.band_index], np.cumsum(segment_sizes))[:-1]
@@ -93,8 +62,8 @@ for folder in tqdm(os.listdir('data')):
             window_size = np.max(window_k) - np.min(window_k)
 
             gap = np.min(window_band_u) - np.max(window_band_l)
-            window_band_l = interpolate_normalize(window_k, window_band_l)
-            window_band_u = interpolate_normalize(window_k, window_band_u)
+            window_band_l = interpolate_normalize(window_k, window_band_l, opt.dimensions)
+            window_band_u = interpolate_normalize(window_k, window_band_u, opt.dimensions)
             annoyindex.add_item(len(lookuptable), np.concatenate([window_band_l, window_band_u]))
             lookuptable.append([int(folder), k_norm + window_left, gap])
 
@@ -102,4 +71,4 @@ for folder in tqdm(os.listdir('data')):
         
 annoyindex.build(opt.trees)
 annoyindex.save('index_%d.ann' % opt.band_index)
-np.save('lookuptable', lookuptable)
+np.save('lookuptable_%d' % opt.band_index, lookuptable)

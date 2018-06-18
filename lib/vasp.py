@@ -82,3 +82,16 @@ class Kpoints:
 
                 k = np.array([float(ki) for ki in k.split(" ")])
                 self.k_points.append((name, k))
+
+
+        # Find continuous segments in KPOINTS
+        # For example: segment_sizes => [40, 40, 40, 20]
+        last_k = None
+        self.segment_sizes = []
+        for segment in chunks(self.k_points, 2):
+            # segment => [('X', array([0.5, 0. , 0. ])), ('Γ', array([0., 0., 0.]))]
+            if np.array_equal(segment[0][1], last_k):
+                self.segment_sizes[-1] += self.intersections
+            else:
+                self.segment_sizes.append(self.intersections)
+            last_k = segment[1][1]

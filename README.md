@@ -10,7 +10,16 @@ pip install -r requirements.txt
 ```
 
 ## Example
-First, create an ANN (approximate nearest neighbours) index:
+This repository contains a data folder with VASP calculations, you can add more calculations here. Each folder represents a single material. Next, to create an ANN (approximate nearest neighbours) index, run:
 ```
-python create_index.py --dataset folder --band_index 0 --width 0.4 --dimensions 16 --trees 10
+python create_index.py --dataset folder --band_index -1 --width 0.4 --dimensions 16 --trees 10
 ```
+
+```
+python search.py --band_index -1 --width 0.4 --dimensions 16
+```
+The following plot should appear:
+![Search Result Dirac crossing](misc/crossing_search_result.png)
+
+## Test
+TODO

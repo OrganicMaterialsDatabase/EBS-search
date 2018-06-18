@@ -1,2 +1,4 @@
-numpy
+annoy
 tqdm
+matplotlib
+numpy
