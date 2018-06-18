@@ -14,7 +14,7 @@ This repository contains a data folder with a VASP calculation. You can add more
 
 Create an ANN (approximate nearest neighbours) index (see [create_index.py](create_index.py) for all options):
 ```
-python create_index.py --dataset folder --band_index -1 --width 0.4 --dimensions 16 --trees 10
+python create_index.py --band_index -1 --width 0.4 --dimensions 16 --trees 10
 ```
 
 Perform the search for a crossing/node:
@@ -29,5 +29,20 @@ This prints the angular distance and the following plot should appear:
 For reference, see the [OMDB material information](https://omdb.diracmaterials.org/material/cod/7155013). Note that the lookup table also contains information about the gap between the two bands. On the OMDB this is used to apply post-processing to the search results (e.g. filtering out gapped matches).
 
 ## Test data
-TODO
+This repo contains a fake data generator [lib/fake.py](lib/fake.py):
 ![Fake data](misc/fake_data.png)
+```
+python create_test_index.py --width 0.4 --dimensions 64 --trees 10
+```
+```
+python test_search.py --width 0.4 --results 6 --dimensions 64 --pattern crossing
+```
+![Test crossings](misc/test_results_crossing.png)
+```
+python test_search.py --width 0.4 --results 6 --dimensions 64 --pattern parabola
+```
+![Test parabola](misc/test_results_parabola.png)
+```
+python test_search.py --width 0.4 --results 1 --dimensions 64 --pattern mexican
+```
+![Test mexican](misc/test_results_mexican.png)

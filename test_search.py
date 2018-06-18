@@ -4,8 +4,12 @@ import numpy as np
 from lib import vasp
 from lib.preprocessing import interpolate_normalize, path_1D, plot_band_structure
 
+from lib import fake
+import matplotlib.pyplot as plt
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dimensions', type=int, default=16, help='number of data points for each band')
+parser.add_argument('--results', type=int, default=5, help='# of results')
 parser.add_argument('--band_index', type=int, default=0, help='band index relative to Fermi level')
 parser.add_argument('--width', type=float, default=.4, help='sliding window width')
 parser.add_argument('--pattern', required=True, help='crossing | parabola | mexican')
@@ -13,9 +17,9 @@ opt = parser.parse_args()
 print(opt)
 
 annoyindex = AnnoyIndex(int(2*opt.dimensions), metric='angular')
-annoyindex.load('index_%d.ann' % opt.band_index)
+annoyindex.load('index_test.ann')
 
-lookuptable = np.load('lookuptable_%d.npy' % opt.band_index)
+lookuptable = np.load('lookuptable_test.npy')
 
 # Define a crossing (Dirac cone) as a search pattern
 if opt.pattern == 'crossing':
@@ -40,15 +44,21 @@ else:
 
 
 # Plot search pattern
-# import matplotlib.pyplot as plt
-# plt.plot(search_upper)
-# plt.plot(search_lower)
-# plt.show()
+#plt.plot(search_upper)
+#plt.plot(search_lower)
+#plt.show()
 
+plt.plot(fake.k, fake.E_upper, 'k')
+plt.plot(fake.k, fake.E_lower, 'k')
 
 # Search
-results = annoyindex.get_nns_by_vector(search_vector, 1, search_k=-1, include_distances=True)
+results = annoyindex.get_nns_by_vector(search_vector, opt.results, search_k=-1, include_distances=True)
 for result, distance in zip(*results):
-    folder, k, gap = lookuptable[result]
+    k, gap = lookuptable[result]
     print('Angular distance =', distance, 'k =', k)
-    plot_band_structure(str(int(folder)), opt.band_index, opt.width, k)
+    plt.axvspan(k, k+opt.width, color='red', alpha=0.5)
+
+plt.ylabel('Energy')
+plt.xlabel('k')
+plt.savefig('misc/test_results_'+opt.pattern+'.png')
+plt.show()

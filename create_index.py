@@ -8,7 +8,6 @@ from annoy import AnnoyIndex
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', required=True, help='folder | fake')
 parser.add_argument('--band_index', type=int, default=0, help='band index relative to Fermi level')
 parser.add_argument('--width', type=float, default=.4, help='sliding window width')
 parser.add_argument('--dimensions', type=int, default=16, help='number of data points for each band')
