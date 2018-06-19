@@ -33,7 +33,7 @@ def interpolate_normalize(k, E, dimensions):
 from lib import vasp
 import matplotlib.pyplot as plt
 
-def plot_band_structure(folder, band_index, width, k_highlight):
+def plot_band_structure(folder, band_index, width, k_highlight, pattern):
     """
     - Plots two bands (which one is indicated by band_index)
     - Highlights a window of width `width` at k `k_highlight`
@@ -79,5 +79,5 @@ def plot_band_structure(folder, band_index, width, k_highlight):
     plt.xlabel('k')
     plt.grid(True)
     plt.title('material ' + folder)
-    plt.savefig('search_result.png')
+    plt.savefig('misc/'+pattern+'_search_result.png')
     plt.show()

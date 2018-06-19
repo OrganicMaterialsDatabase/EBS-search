@@ -28,8 +28,8 @@ elif opt.pattern == 'parabola':
     search_lower = interpolate_normalize(k, -1*(k**2), opt.dimensions)
     search_vector = np.concatenate([search_lower, search_upper])
 elif opt.pattern == 'mexican':
-    k = [0, .25, .5, .75, 1]
-    E = [1, 0, 1, 0, 1]
+    k = [0, .1, .25, .5, .75, .9, 1]
+    E = [1, .9, .5, 1, .5, .9, 1]
     p = np.poly1d(np.polyfit(k, E, 4))
     k = np.linspace(0, 1, 1000)
     search_upper = interpolate_normalize(k, [p(x) for x in k], opt.dimensions)
@@ -41,8 +41,8 @@ else:
 
 # Plot search pattern
 # import matplotlib.pyplot as plt
-# plt.plot(search_upper)
-# plt.plot(search_lower)
+# plt.plot(search_upper, 'r')
+# plt.plot(search_lower, 'b')
 # plt.show()
 
 
@@ -51,4 +51,4 @@ results = annoyindex.get_nns_by_vector(search_vector, 1, search_k=-1, include_di
 for result, distance in zip(*results):
     folder, k, gap = lookuptable[result]
     print('Angular distance =', distance, 'k =', k)
-    plot_band_structure(str(int(folder)), opt.band_index, opt.width, k)
+    plot_band_structure(str(int(folder)), opt.band_index, opt.width, k, opt.pattern)
