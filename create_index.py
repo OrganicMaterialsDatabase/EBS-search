@@ -72,3 +72,4 @@ for folder in tqdm(os.listdir('data')):
 annoyindex.build(opt.trees)
 annoyindex.save('index_%d.ann' % opt.band_index)
 np.save('lookuptable_%d' % opt.band_index, lookuptable)
+print('%d vectors stored in index' % len(lookuptable))

@@ -28,7 +28,7 @@ This prints the angular distance and the following plot should appear:
 
 For reference, see the [OMDB material information](https://omdb.diracmaterials.org/material/cod/7155013). Note that the lookup table also contains information about the gap between the two bands. On the OMDB this is used to apply post-processing to the search results (e.g. filtering out gapped matches).
 
-To search between the bands (-2,-1) for a parabola (as in Figure 8 in the paper):
+To search between the bands (-2,-1) for a parabola, run:
 ```
 python create_index.py --band_index -2 --width 0.4 --dimensions 16 --trees 10
 python search.py --band_index -2 --width 0.4 --dimensions 16 --pattern parabola
@@ -36,7 +36,7 @@ python search.py --band_index -2 --width 0.4 --dimensions 16 --pattern parabola
 ![Search Result Parabola crossing](misc/parabola_search_result.png)
 ```
 python create_index.py --band_index -3 --width 0.8 --dimensions 64 --trees 10
-python search.py --band_index -3 --width 0.8 --dimensions 64 --pattern parabola
+python search.py --band_index -3 --width 0.8 --dimensions 64 --pattern mexican --search_k 200
 ```
 ![Search Result Mexican hat](misc/mexican_search_result.png)
 
